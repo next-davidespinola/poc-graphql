@@ -22,30 +22,50 @@ GraphQL se desarrolló en Facebook en 2012, se liberó en 2015 y se independizó
 
 > Si va a ser necesaria alguna infraestructura o necesidades en la realización de la prueba de concepto para poder desarrollarla: cuentas de AWS, espacio en Drive, etc...
 
+La prueba de concepto se realizará en local, no se desplegará en ningún entorno, por lo que no será necesaria ninguna infraestructura.
+
 ### Estimación de costes
 
 > Especificación de los costes asociados a la realización de la prueba de concepto.
+
+Dado que la PoC se realizará en local, en el ordenador de cada miembro, a parte del coste de horas/persona no se va a incurrir en ningún coste asociadp.
 
 ### Tareas
 
 > Descripción de cada una de las tareas a abordar en la elaboración de la prueba de concepto.
 
+- Tareas Backend
+	- Análisis, instalación y primeras pruebas con GraphQL + Typescript
+	- Creación del esqueleto del servidor backend con NodeJS + Express + Apollo
+	- Definición del API y de los schemas de los datos
+	- Implementación básica (mocks) de los servicios para integración con front
+	- Elección de APIs públicas para utilizar como origen de datos
+	- ¿Utilizar BB.DD. como otro origen más de datos?
+	- Implementación del backend, integrando el/los API/s público/s
+	- ¿Incluir autorización en algunos servicios?
+	- ¿Acceso por roles?
+	- Integración con front y finalización de la PoC
+
 ### Dedicación
 
 > Estimación orientativa de los tiempos que se espera dedicar en horas semanales.
+
+De forma general, los miembros de las tribus pueden dedicar un máximo de 2h semanales.
 
 ## Autores
 
 > Quién va a llevar a cabo la prueba de concepto.
 
-- @usuario1
-- @usuario2
+- @next-davidespinola
+- @next-tomasrebollo
+- @next-javiergarcia
+- @next-josedanielhernandezosorio
 
 ## Colaboraciones
 
 > Tribus que colaboran en la prueba de concepto.
 
-- Tribu1
-- Tribu2
+- Tribu Front
+- Tribu Backend
 
 #### #tag1 #tag2 #tag3
