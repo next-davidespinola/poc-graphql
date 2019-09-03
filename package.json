@@ -4,7 +4,10 @@
   "description": "El objetivo de este repositorio es coordinarnos para la realización de la PoC. Podemos proponer la forma de trabajar que consideremos más apropiada y hablar los temas relacionados a través de [las issues](https://github.com/next-davidespinola/poc-graphql/issues).",
   "main": "index.js",
   "dependencies": {
+    "apollo-datasource": "^0.6.1",
+    "apollo-datasource-rest": "^0.6.1",
     "apollo-server-express": "^2.8.1",
+    "class-validator": "^0.10.0",
     "express": "^4.17.1",
     "graphql": "^14.4.2",
     "http": "0.0.0",

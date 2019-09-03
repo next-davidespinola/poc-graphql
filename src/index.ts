@@ -5,8 +5,9 @@ import { createServer } from 'http';
 import { buildSchema } from 'type-graphql';
 import depthLimit from 'graphql-depth-limit';
 
-import MovieResolver from './resolvers/movie-resolver';
-import PersonResolver from './resolvers/person-resolver';
+import MovieResolver from './resolvers/movie.resolver';
+import PersonResolver from './resolvers/person.resolver';
+import {DataSources} from "./datasources/datasources";
 
 const app = express();
 
@@ -25,6 +26,12 @@ async function init() {
   const server = new ApolloServer({
     schema,
     validationRules: [depthLimit(7)],
+    dataSources: () => DataSources.sources(),
+    context: () => {
+      return {
+        token: '1b9096a58ddab245a4018afc0a66ef89',
+      };
+    }
   });
   server.applyMiddleware({ app, path: '/graphql' });
 
