@@ -34,13 +34,23 @@ export default class {
   //                        MUTATIONS
   ////////////////////////////////////////////////////////////////
 
-  @Mutation(returns => Movie)
-  async addMovie(
-    @Arg("list") list: string,
-    @Arg("movie") movie: MovieDto,
+  @Mutation(returns => Number)
+  async addMovieToList(
+    @Arg("listId") listId: number,
+    @Arg("movieId") movieId: number,
     @Ctx('dataSources') dataSources: IDataSources
-  ): Promise<Movie> {
-    return await dataSources.moviesAPI.addMovieToList(movie, list);
+  ): Promise<Number> {
+    return await dataSources.moviesAPI.addMovieToList(movieId, listId);
+  }
+
+
+  @Mutation(returns => Number)
+  async removeMovieFromList(
+    @Arg("listId") listId: number,
+    @Arg("movieId") movieId: number,
+    @Ctx('dataSources') dataSources: IDataSources
+  ): Promise<Number> {
+    return await dataSources.moviesAPI.removeMovieFromList(movieId, listId);
   }
 
 
@@ -63,7 +73,10 @@ export default class {
   async cast(
     @Root() movie: Movie,
     @Ctx('dataSources') dataSources: IDataSources
-  ): Promise<Person[]> {
-    return await Promise.all(movie.cast.map(async (elem) => await dataSources.moviesAPI.getPerson(elem.id)));
+  ): Promise<Person[]|null> {
+    if (movie.cast){
+      return await Promise.all(movie.cast.map(async (elem) => await dataSources.moviesAPI.getPerson(elem.id)));
+    }
+    return null;
   }
 }

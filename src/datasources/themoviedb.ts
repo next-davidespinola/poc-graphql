@@ -1,7 +1,8 @@
 import {RequestOptions, RESTDataSource} from 'apollo-datasource-rest';
 import Movie from "../schemas/movie";
-import {MovieDto} from "../dtos/movie.dto";
+import {ListDto} from "../dtos/list.dto";
 import Person from "../schemas/person";
+import List from "../schemas/list";
 
 export class TheMovieDBAPI extends RESTDataSource {
 
@@ -15,6 +16,7 @@ export class TheMovieDBAPI extends RESTDataSource {
 
   willSendRequest(request: RequestOptions) {
     request.params.set('api_key', this.context.token);
+    request.params.set('session_id', this.context.sessionId);
   }
 
   /**
@@ -48,13 +50,38 @@ export class TheMovieDBAPI extends RESTDataSource {
   }
 
   /**
-   * Adds a movie to a list.
-   * @param {MovieDto} movie    The movie to add.
-   * @param {string} list       Name of the list.
-   * @return {Promise<void>}
+   * Add a movie to list.
+   * @param {number} movieId    The movie id to remove.
+   * @param {number} listId       Identifier of the list.
+   * @return {Promise<Number>}
    */
-  async addMovieToList(movie: MovieDto, list: string): Promise<Movie> {
-    return await this.put('list', {movie});
+  async addMovieToList(movieId: number, listId: number): Promise<Number> {
+
+    let body = { media_id: movieId }
+    let headers = { headers: { 'Content-Type': 'application/json'} }
+    let data = await this.post(`/list/${listId}/add_item`,
+      JSON.stringify(body),
+      headers
+    );
+    return movieId;
+  }
+
+
+  /**
+   * Remove a movie from a list.
+   * @param {number} movieId    The movie id to remove.
+   * @param {number} listId       Identifier of the list.
+   * @return {Promise<Number>}
+   */
+  async removeMovieFromList(movieId: number, listId: number): Promise<Number> {
+
+    let body = { media_id: movieId }
+    let headers = { headers: { 'Content-Type': 'application/json'} }
+    let data = await this.post(`/list/${listId}/remove_item`,
+      JSON.stringify(body),
+      headers
+    );
+    return movieId;
   }
 
   /**
@@ -84,6 +111,68 @@ export class TheMovieDBAPI extends RESTDataSource {
       const credits = await this.get(`person/${elem.id}/movie_credits`);
       return parsePerson(elem, credits);
     });
+  }
+
+
+  /**
+   * Retrieves all movie lists for our account in TheMovieDB API.
+   * @param {string} query
+   * @param {number} skip
+   * @param {number} take
+   * @return {Promise<List[]>}
+   */
+  async getLists(
+    skip?: number,
+    take?: number
+  ): Promise<List[]> {
+    let data = await this.get(`/account/${this.context.accountId}/lists`, {});
+    return await data.results.map(async (elem: any) => {
+      return parseList(elem);
+    });
+  }
+
+    /**
+   * Retrieves all lists of our account in TheMovieDB API.
+   * @param {number} id
+
+   * @return {Promise<List>}
+   */
+  async getList( id: number ): Promise<List> {
+    let data = await this.get(`/list/${id}`, {});
+
+    return parseList(data);
+  }
+
+   /**
+   * Create a list 
+   * @param {ListDto} listDto
+   * @return {Promise<List>}
+   */
+  async createList(listDto: ListDto): Promise<List> {
+
+    let headers = { headers: { 'Content-Type': 'application/json'} } 
+    let data = await this.post(`/list`,
+      JSON.stringify(listDto),
+      headers);
+    
+    let le = parseList(listDto);
+    le.id = data.list_id;
+    return le;
+  }
+
+  /**
+   * Delete a Movie List.
+   * @param {string} id
+   * @return {Promise<Number>}
+   */
+  async deleteList(id: string) : Promise<String> {
+    // The Movie Db API has a bug in this operation
+    // https://www.themoviedb.org/talk/5947cc13c3a36816f6040f2f
+    // The list is deleted but the API returns 500 error
+    // If it deletes again the API returns 404 error.
+    let data = await this.delete(`/list/${id}`, {});
+    console.log(data);
+    return id;
   }
 
 }
@@ -142,3 +231,22 @@ const parsePerson = (data: any, credits?: any): Person => {
   return person;
 };
 
+
+/**
+ * Parses the JSON body response of a List.
+ * @param data
+ * @return {List}
+ */
+const parseList = (data: any): List => {
+  let list = new List();
+  list.id = data.id;
+  list.name = data.name;
+  list.description = data.description;
+  if (data.items){
+    list.movies = new Array<Movie>();
+    data.items.map(async (elem: any) => {
+      list.movies.push(parseMovie(elem))
+    });
+  }
+  return list;
+};
