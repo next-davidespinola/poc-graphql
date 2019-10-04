@@ -1,0 +1,89 @@
+
+{
+  lists{
+    id
+    name
+    description
+  }
+}
+
+
+{
+  list(id: 122679){
+    id
+    name
+    description
+    movies{
+      id
+      title
+    }
+  }
+}
+
+
+
+{
+  movies(name: "Fast Food Nation"){
+    id
+    title
+    date
+    director{
+      name
+    }
+    cast{
+      name
+    }
+  }
+}
+
+
+{
+  movie(id: 8324){
+    id
+    title
+    date
+    director{
+      name
+    }
+    cast{
+      name
+    }
+  }
+}
+
+
+{
+  persons(name: "Peter Dinklage"){
+    id
+    name
+    gender
+    filmography{
+      title
+    }
+  }
+}
+
+
+
+mutation { 
+  createList(
+    data : {name: "xxxx", description: "yyyyyy"}
+  ){
+    id
+    name
+    description
+  }
+}
+
+mutation { 
+  addMovieToList(listId: 122681, movieId: 8324)
+}
+
+mutation { 
+  removeMovieFromList(listId: 122681, movieId: 8324)
+}
+
+
+mutation { 
+  deleteList(id: "122681")
+}
