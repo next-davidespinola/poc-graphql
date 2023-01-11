@@ -7,7 +7,7 @@
     "apollo-datasource": "^0.6.1",
     "apollo-datasource-rest": "^0.6.1",
     "apollo-server-express": "^2.8.1",
-    "class-validator": "^0.10.0",
+    "class-validator": "^0.14.0",
     "express": "^4.17.1",
     "graphql": "^14.4.2",
     "http": "0.0.0",
